@@ -1,0 +1,45 @@
+---
+- name: Provision App
+  hosts: slave
+  remote_user: vagrant
+  become: true
+  tasks:
+
+    # - name: put pubkey in slave
+    #   lineinfile:
+    #     path: "/home/vagrant/.ssh/authorized_keys"
+    #     line: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCxTJlM9fqKU14MP4fwdZJLhntmqMEn8Z6mYg2sve8/pimjt7/V6A01CNRvCEdHaT/wR+CadOXDQkSUMF+ZZ7T5vvCbiT7AJc1S5Qa3ORQPIlO8QMVl5TcEAZ6EWYUeXuedHzoOECZaa6LyrEI7Hs/9e1IW94CwFyuGbomyZ3cq77zqifO/YbVpHeVWA02nsblz26nbsMM63EjFQlfqcB1XdlbrwUikcDFqKn0SVbP/TkOFvSqRsghQajlIMjqMA3EnEYeAcaeSoHaKFK7LdS/k24MseUzyVairy9g6hpXs7n3apDDEAAwC3WJaQDdvc6WI/i6jFHyFvs34JgWy5IogQ0Q7Gk2QtE358DbaKDaWhxkvzjZoGLdxiTTxzoTq7wHggy114EQPjcxbGHy9QJD9/wA3hFvCiPymM3DII+OiduUMibKVDTBswEEuJnD2XMdvydj2oWJwDt/vR+c+HeZDgHXjNTIK+wXWPyo6W5q+jJU4ym99FcSbw8qp1eiXNJ0= Jason Robinson@lt-lon-W029
+
+    - name: ensure nginx is at the latest version
+      apt:
+        name: nginx
+        state: latest
+
+    - name: start nginx
+      service:
+        name: nginx
+        state: started
+      become: yes
+
+    - name: ensure git is at the latest version
+      apt: name=git state=latest
+
+    - name: ensure nodejs is at the latest version
+      apt:
+        name: nodejs
+        state: latest
+
+    - name: ensure nodejs is present
+      apt: name=nodejs state=present
+
+    - name: ensure npm is present
+      apt: name=npm state=present
+
+    - name: install pm2 is with npm
+      command: npm install pm2 -g
+
+    - name: Install OpenJDK Java
+      become: yes
+      apt:
+        name: openjdk-8-jdk
+        state: present

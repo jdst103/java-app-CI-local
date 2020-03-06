@@ -1,0 +1,25 @@
+---
+- name: Provision App
+  hosts: db
+  remote_user: sudo
+  become: true
+  tasks:
+
+    - name: mongo install key
+      apt_key:
+        url: https://www.mongodb.org/static/pgp/server-4.2.asc
+        state: present
+
+
+    - name: MongoDB - Add Repository
+      apt_repository:
+        filename: '/etc/apt/sources.list.d/mongodb-org-4.2.list'
+        repo: 'deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse'
+        state: present
+        update_cache: yes
+
+    - name: MongoDB - Install MongoDB
+      apt: name=mongodb-org state=present update_cache=yes
+
+    - name: changing the config on db
+      command: rm /etc/mongod.conf; ln -s /home/ubuntu/environment/mongod.conf /etc/mongod.conf; systemctl restart mongod; systemctl enable mongod
